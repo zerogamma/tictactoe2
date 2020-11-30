@@ -72,14 +72,6 @@ class Board extends React.Component {
   handleBoxClick(index) {
     const boxes = this.state.boxes.slice();
 
-    //if (utils.findWinner(boxes) || boxes[index]) {
-    //   return
-    //}
-
-    ///if(utils.areAllBoxesClicked(boxes) === true) {
-    //   return
-    //}
-
     boxes[index] = this.state.xIsNext ? "x" : "o";
 
     this.setState({
@@ -139,7 +131,7 @@ class Board extends React.Component {
     return (
       <div style={containerStyle} className="gameBoard">
         <div className="status" style={instructionsStyle}>
-          Next player: X
+          Next player: {this.state.xIsNext ? "x" : "o"}
         </div>
         <div className="winner" style={instructionsStyle}>
           Winner: {winner ? `${winner}` : "None"}
