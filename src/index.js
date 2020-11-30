@@ -119,19 +119,14 @@ class Board extends React.Component {
   }
 
   areAllBoxesClicked(boxes) {
-    // Declare variable to store number of clicked boxes.
     let count = 0;
 
-    // Iterate over all boxes
     boxes.forEach(function (item) {
-      // Check if box is clicked (not null)
       if (item !== null) {
-        // If yes, increase the value of count by 1
         count++;
       }
     });
 
-    // Check if all boxes are clicked (filled)
     if (count === 9) {
       return true;
     } else {
@@ -141,15 +136,13 @@ class Board extends React.Component {
 
   render() {
     const winner = this.findWinner(this.state.boxes);
-    let status = winner ? `${winner}` : "None";
-
     return (
       <div style={containerStyle} className="gameBoard">
         <div className="status" style={instructionsStyle}>
           Next player: X
         </div>
         <div className="winner" style={instructionsStyle}>
-          Winner: {status}
+          Winner: {winner ? `${winner}` : "None"}
         </div>
         <button style={buttonStyle} onClick={this.handleBoardRestart}>
           Reset
