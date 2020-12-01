@@ -50,44 +50,37 @@ const buttonStyle = {
   fontSize: "16px"
 };
 
-class Square extends React.Component {
-  render() {
-    return (
-      <div className="square" style={squareStyle} onClick={this.props.onClick}>
-        {this.props.value}
-      </div>
-    );
-  }
-}
+const Square = (props) => (
+  <div className="square" style={squareStyle} onClick={props.onClick}>
+    {props.value}
+  </div>
+);
 
-class Board extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      boxes: Array(9).fill(null),
-      xIsNext: true
-    };
-  }
-
-  handleBoxClick(index) {
-    const boxes = this.state.boxes.slice();
-
-    boxes[index] = this.state.xIsNext ? "x" : "o";
-
-    this.setState({
-      boxes: boxes,
-      xIsNext: !this.state.xIsNext
-    });
-  }
-
-  handleBoardRestart = () => {
-    this.setState({
-      boxes: Array(9).fill(null),
-      xIsNext: true
-    });
+const Board = () => {
+  const initialState = {
+    boxes: Array(9).fill(null),
+    xIsNext: true
   };
 
-  findWinner(boxes) {
+  const [props, setProps] = useState(initialState);
+
+  const handleBoxClick = (index) => {
+    const boxes = props.boxes.slice();
+
+    boxes[index] = props.xIsNext ? "x" : "o";
+
+    const newState = {
+      boxes: boxes,
+      xIsNext: !props.xIsNext
+    };
+    setProps(newState);
+  };
+
+  const handleBoardRestart = () => {
+    setProps(initialState);
+  };
+
+  const findWinner = (boxes) => {
     const rows = [
       [0, 1, 2],
       [3, 4, 5],
@@ -108,9 +101,9 @@ class Board extends React.Component {
     }
 
     return null;
-  }
+  };
 
-  areAllBoxesClicked(boxes) {
+  const areAllBoxesClicked = (boxes) => {
     let count = 0;
 
     boxes.forEach(function (item) {
@@ -124,80 +117,49 @@ class Board extends React.Component {
     } else {
       return false;
     }
-  }
+  };
 
-  render() {
-    const winner = this.findWinner(this.state.boxes);
-    return (
-      <div style={containerStyle} className="gameBoard">
-        <div className="status" style={instructionsStyle}>
-          Next player: {this.state.xIsNext ? "x" : "o"}
+  const winner = findWinner(props.boxes);
+  return (
+    <div style={containerStyle} className="gameBoard">
+      <div className="status" style={instructionsStyle}>
+        Next player: {props.xIsNext ? "x" : "o"}
+      </div>
+      <div className="winner" style={instructionsStyle}>
+        Winner: {winner ? `${winner}` : "None"}
+      </div>
+      <button style={buttonStyle} onClick={handleBoardRestart}>
+        Reset
+      </button>
+      <div style={boardStyle}>
+        <div className="board-row" style={rowStyle}>
+          <Square value={props.boxes[0]} onClick={() => handleBoxClick(0)} />
+          <Square value={props.boxes[1]} onClick={() => handleBoxClick(1)} />
+          <Square value={props.boxes[2]} onClick={() => handleBoxClick(2)} />
         </div>
-        <div className="winner" style={instructionsStyle}>
-          Winner: {winner ? `${winner}` : "None"}
+        <div className="board-row" style={rowStyle}>
+          <Square value={props.boxes[3]} onClick={() => handleBoxClick(3)} />
+          <Square value={props.boxes[4]} onClick={() => handleBoxClick(4)} />
+          <Square value={props.boxes[5]} onClick={() => handleBoxClick(5)} />
         </div>
-        <button style={buttonStyle} onClick={this.handleBoardRestart}>
-          Reset
-        </button>
-        <div style={boardStyle}>
-          <div className="board-row" style={rowStyle}>
-            <Square
-              value={this.state.boxes[0]}
-              onClick={() => this.handleBoxClick(0)}
-            />
-            <Square
-              value={this.state.boxes[1]}
-              onClick={() => this.handleBoxClick(1)}
-            />
-            <Square
-              value={this.state.boxes[2]}
-              onClick={() => this.handleBoxClick(2)}
-            />
-          </div>
-          <div className="board-row" style={rowStyle}>
-            <Square
-              value={this.state.boxes[3]}
-              onClick={() => this.handleBoxClick(3)}
-            />
-            <Square
-              value={this.state.boxes[4]}
-              onClick={() => this.handleBoxClick(4)}
-            />
-            <Square
-              value={this.state.boxes[5]}
-              onClick={() => this.handleBoxClick(5)}
-            />
-          </div>
-          <div className="board-row" style={rowStyle}>
-            <Square
-              value={this.state.boxes[6]}
-              onClick={() => this.handleBoxClick(6)}
-            />
-            <Square
-              value={this.state.boxes[7]}
-              onClick={() => this.handleBoxClick(7)}
-            />
-            <Square
-              value={this.state.boxes[8]}
-              onClick={() => this.handleBoxClick(8)}
-            />
-          </div>
+        <div className="board-row" style={rowStyle}>
+          <Square value={props.boxes[6]} onClick={() => handleBoxClick(6)} />
+          <Square value={props.boxes[7]} onClick={() => handleBoxClick(7)} />
+          <Square value={props.boxes[8]} onClick={() => handleBoxClick(8)} />
         </div>
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
-class Game extends React.Component {
-  render() {
-    return (
-      <div className="game">
-        <div className="game-board">
-          <Board />
-        </div>
+const Game = () => {
+  return (
+    <div className="game">
+      <div className="game-board">
+        <Board />
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
 ReactDOM.render(<Game />, document.getElementById("root"));
